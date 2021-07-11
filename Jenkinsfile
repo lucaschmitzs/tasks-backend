@@ -46,5 +46,14 @@ pipeline {
                 }
             }
         }
+        stage ('Deploy Frontend') {
+            steps {
+                dir('frontend') {
+                    git credentialsId: 'GitHub', url: 'https://github.com/lucaschmitzs/tasks-frontend.git'
+                    sh 'mvn clean package'
+                    deploy adapters: [tomcat8(credentialsId: 'TomCat', path: '', url: 'http://localhost:8001/')], contextPath: 'tasks', war: 'target/tasks.war'
+                }
+            }
+        }
     }
 }
